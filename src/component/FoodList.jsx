@@ -1,4 +1,4 @@
-function FoodListItem({ item , onDelete }) {
+function FoodListItem({ item, onDelete }) {
   const { imgUrl, title, calorie, content } = item;
   const handleDeleteClick = () => onDelete(item.id);
 
@@ -13,7 +13,7 @@ function FoodListItem({ item , onDelete }) {
   );
 }
 
-function FoodList({ items,onDelete }) {
+function FoodList({ items, onDelete }) {
   return (
     <ul className="FoodList">
       {items.map((item) => (
