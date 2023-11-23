@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import { getFoods } from "../api";
 import FoodList from "./FoodList";
 
-function App() {
+export default  function App() {
   const [order, setOrder] = useState("createdAt");
   const [cursor, setCursor] = useState(null);
   const [items, setItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadingError, setLoadingError] = useState(null);
 
   const handleNewestClick = () => setOrder("createdAt");
 
@@ -17,10 +19,22 @@ function App() {
   };
 
   const handleLoad = async (options) => {
+    let result;
+    try {
+      setLoadingError(null);
+      setIsLoading(true);
+      result = await getFoods(options);
+    } catch (error) {
+      setLoadingError(error);
+      return;
+    } finally {
+      setIsLoading(false);
+    }
+  
     const {
       foods,
       paging: { nextCursor },
-    } = await getFoods(options);
+    } = result;
     if (!options.cursor) {
       setItems(foods);
     } else {
@@ -28,6 +42,7 @@ function App() {
     }
     setCursor(nextCursor);
   };
+  
 
   const handleLoadMore = () => {
     handleLoad({
@@ -49,9 +64,14 @@ function App() {
       <button onClick={handleNewestClick}>최신순</button>
       <button onClick={handleCalorieClick}>칼로리순</button>
       <FoodList items={sortedItems} onDelete={handleDelete} />
-      {cursor && <button onClick={handleLoadMore}>더보기</button>}
+      {cursor && (
+        <button disabled={isLoading} onClick={handleLoadMore}>
+          더보기
+        </button>
+      )}
+      {loadingError?.message && <p>{loadingError.message}</p>}
     </div>
   );
 }
 
-export default App;
+

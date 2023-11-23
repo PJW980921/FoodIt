@@ -13,7 +13,7 @@ function FoodListItem({ item, onDelete }) {
   );
 }
 
-function FoodList({ items, onDelete }) {
+export default function FoodList({ items, onDelete }) {
   return (
     <ul className="FoodList">
       {items.map((item) => (
@@ -25,4 +25,4 @@ function FoodList({ items, onDelete }) {
   );
 }
 
-export default FoodList;
+
