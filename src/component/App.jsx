@@ -53,18 +53,22 @@ export default  function App() {
     });
   };
 
-  const sortedItems = items.sort((a, b) => b[order] - a[order]);
-
-  useEffect(() => {
-    handleLoad({
-      order,
-    });
-  }, [order,search]);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     setSearch(e.target['search'].value);
   };
+  
+  const sortedItems = items.sort((a, b) => b[order] - a[order]);
+
+  useEffect(() => {
+    handleLoad({
+      order,
+      search,
+    });
+  }, [order,search]);
+
+
 
   return (
     <div>
