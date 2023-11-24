@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getFoods } from "../api";
 import FoodList from "./FoodList";
+import FoodItForm from "./FoodItForm";
 
 export default  function App() {
   const [order, setOrder] = useState("createdAt");
@@ -72,12 +73,12 @@ export default  function App() {
 
   return (
     <div>
-      <form onSubmit={handleSearchSubmit}>
-  <input name="search" />
-  <button type="submit">검색</button>
-</form>
+      <div>
       <button onClick={handleNewestClick}>최신순</button>
       <button onClick={handleCalorieClick}>칼로리순</button>
+      <FoodItForm/>
+      </div>
+      <div>
       <FoodList items={sortedItems} onDelete={handleDelete} />
       {cursor && (
         <button disabled={isLoading} onClick={handleLoadMore}>
@@ -85,6 +86,7 @@ export default  function App() {
         </button>
       )}
       {loadingError?.message && <p>{loadingError.message}</p>}
+      </div>
     </div>
   );
 }
