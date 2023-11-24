@@ -1,42 +1,46 @@
 import React, { useState } from "react";
+function sanitize(type, value) {
+  switch (type) {
+    case 'number':
+      return Number(value) || 0;
 
+    default:
+      return value;
+  }
+}
 export default function FoodItForm() {
-  const [foodName, setFoodName] = useState("");
-  const [calorie, setCalorie] = useState(0);
-  const [content, setContent] = useState("");
+  const [values , setValues] = useState({
+    foodName : '',
+    calorie : sanitize(type , value),
+    content : '',
+  })
 
-  const handleSearchFoodName = (e) => {
-    setFoodName(e.target.value);
-  };
+  const handleChange = (e) => {
+    const {name , value} = e.target;
+    setValues((prevValues)=>({
+      ...prevValues,
+      [name] : value,
+    }));
+  }
 
-  const handleSearchCalorie = (e) => {
-    const nextCalorie = +e.target.value || 0;
-    setCalorie(nextCalorie);
-  };
+  
 
-  const handleSearchContent = (e) => {
-    setContent(e.target.value);
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log({
-      foodName,
-      calorie,
-      content,
-    })
+    console.log(values);
   }
-  
+
   return (
     <form onSubmit={handleSubmit}>
-      <input value={foodName} onChange={handleSearchFoodName} />
+      <input value={values.foodName} onChange={handleChange} />
       <input
         type="number"
         name="calorie"
-        value={calorie}
-        onChange={handleSearchCalorie}
+        value={values.calorie}
+        onChange={handleChange}
       />
-      <input value={content} onChange={handleSearchContent} />
+      <textarea value={values.content} onChange={handleChange} />
       <button type="submit">확인</button>
     </form>
   );
