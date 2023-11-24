@@ -8,6 +8,7 @@ export default  function App() {
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingError, setLoadingError] = useState(null);
+  const [search, setSearch] = useState('');
 
   const handleNewestClick = () => setOrder("createdAt");
 
@@ -48,6 +49,7 @@ export default  function App() {
     handleLoad({
       order,
       cursor,
+      search,
     });
   };
 
@@ -57,10 +59,19 @@ export default  function App() {
     handleLoad({
       order,
     });
-  }, [order]);
+  }, [order,search]);
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    setSearch(e.target['search'].value);
+  };
 
   return (
     <div>
+      <form onSubmit={handleSearchSubmit}>
+  <input name="search" />
+  <button type="submit">검색</button>
+</form>
       <button onClick={handleNewestClick}>최신순</button>
       <button onClick={handleCalorieClick}>칼로리순</button>
       <FoodList items={sortedItems} onDelete={handleDelete} />
