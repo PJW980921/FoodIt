@@ -17,8 +17,18 @@ export default function FoodItForm() {
   const handleSearchContent = (e) => {
     setContent(e.target.value);
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log({
+      foodName,
+      calorie,
+      content,
+    })
+  }
+  
   return (
-    <form action="">
+    <form onSubmit={handleSubmit}>
       <input value={foodName} onChange={handleSearchFoodName} />
       <input
         type="number"
@@ -27,6 +37,7 @@ export default function FoodItForm() {
         onChange={handleSearchCalorie}
       />
       <input value={content} onChange={handleSearchContent} />
+      <button type="submit">확인</button>
     </form>
   );
 }
