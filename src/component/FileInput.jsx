@@ -17,10 +17,16 @@ export default function FileInput({ name, value, onChange }) {
    onChange(name , null);
   }
 
-  useEffect(()=>{if (!value) return 
+  useEffect(()=>{
+    if (!value) return ;
   
   const nextPreview = URL.createObjectURL(value);
   setPreview(nextPreview);
+
+  return () => {
+    setPreview();
+    URL.revokeObjectURL(nextPreview);
+  }
   },[value]);
 
   
