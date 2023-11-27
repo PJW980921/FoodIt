@@ -34,7 +34,9 @@ body {
   display: flex;
   min-height: 100vh;
   flex-direction: column;
-  background-position: top 75px, left center;
+  background-position:
+    top 75px,
+    left center;
   background-size: contain;
   background-repeat: no-repeat;
 }
@@ -118,7 +120,7 @@ body {
 }
 
 .AppSortButton.selected::before {
-  content: '';
+  content: "";
   position: absolute;
   width: 5px;
   height: 5px;

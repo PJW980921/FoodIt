@@ -1,6 +1,8 @@
 import { useState } from "react";
 import FoodForm from "./FoodForm";
 import useTranslate from "../hooks/useTranslate";
+import placeholderImg from "../assets/preview-placeholder.png";
+import "./FoodList.css";
 
 function formatDate(value) {
   const date = new Date(value);
@@ -9,7 +11,8 @@ function formatDate(value) {
 
 function FoodListItem({ item, onEdit, onDelete }) {
   const { imgUrl, title, calorie, content, createdAt } = item;
- const t = useTranslate();
+  const t = useTranslate();
+
   const handleEditClick = () => {
     onEdit(item.id);
   };
@@ -20,18 +23,46 @@ function FoodListItem({ item, onEdit, onDelete }) {
 
   return (
     <div className="FoodListItem">
-      <img src={imgUrl} alt={title} />
-      <div>{title}</div>
-      <div>{calorie}</div>
-      <div>{content}</div>
-      <div>{formatDate(createdAt)}</div>
-      <button onClick={handleEditClick}>{t('edit button')}</button>
-      <button onClick={handleDeleteClick}>{t('delete button')}</button>
+      <img
+        className="FoodListItem-preview"
+        src={imgUrl || placeholderImg}
+        alt={title}
+      />
+      <div className="FoodListItem-rows">
+        <div className="FoodListItem-title-calorie">
+          <h1 className="FoodListItem-title">{title}</h1>
+          <span className="FoodListItem-calorie">{calorie}kcal</span>
+        </div>
+        <p className="FoodListItem-content">{content}</p>
+        <div className="FoodListItem-date-buttons">
+          <p className="FoodListItem-date">{formatDate(createdAt)}</p>
+          <div className="FoodListItem-buttons">
+            <button
+              className="FoodListItem-edit-button"
+              onClick={handleEditClick}
+            >
+              {t("edit button")}
+            </button>
+            <button
+              className="FoodListItem-delete-button"
+              onClick={handleDeleteClick}
+            >
+              {t("delete button")}
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
 
-function FoodList({ items, onUpdate, onUpdateSuccess, onDelete }) {
+function FoodList({
+  className = "",
+  items,
+  onUpdate,
+  onUpdateSuccess,
+  onDelete,
+}) {
   const [editingId, setEditingId] = useState(null);
 
   const handleCancel = () => {
@@ -39,7 +70,7 @@ function FoodList({ items, onUpdate, onUpdateSuccess, onDelete }) {
   };
 
   return (
-    <ul className="FoodList">
+    <ul className={`FoodList ${className}`}>
       {items.map((item) => {
         if (item.id === editingId) {
           const { id, imgUrl, title, calorie, content } = item;
