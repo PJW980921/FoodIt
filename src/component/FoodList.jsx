@@ -1,6 +1,21 @@
-function FoodListItem({ item, onDelete }) {
-  const { imgUrl, title, calorie, content } = item;
-  const handleDeleteClick = () => onDelete(item.id);
+import { useState } from "react";
+import FoodForm from "./FoodForm";
+
+function formatDate(value) {
+  const date = new Date(value);
+  return `${date.getFullYear()}. ${date.getMonth() + 1}. ${date.getDate()}`;
+}
+
+function FoodListItem({ item, onEdit, onDelete }) {
+  const { imgUrl, title, calorie, content, createdAt } = item;
+
+  const handleEditClick = () => {
+    onEdit(item.id);
+  };
+
+  const handleDeleteClick = () => {
+    onDelete(item.id);
+  };
 
   return (
     <div className="FoodListItem">
@@ -8,21 +23,58 @@ function FoodListItem({ item, onDelete }) {
       <div>{title}</div>
       <div>{calorie}</div>
       <div>{content}</div>
+      <div>{formatDate(createdAt)}</div>
+      <button onClick={handleEditClick}>수정</button>
       <button onClick={handleDeleteClick}>삭제</button>
     </div>
   );
 }
 
-export default function FoodList({ items, onDelete }) {
+function FoodList({ items, onUpdate, onUpdateSuccess, onDelete }) {
+  const [editingId, setEditingId] = useState(null);
+
+  const handleCancel = () => {
+    setEditingId(null);
+  };
+
   return (
     <ul className="FoodList">
-      {items.map((item) => (
-        <li key={item.id}>
-          <FoodListItem item={item} onDelete={onDelete} />
-        </li>
-      ))}
+      {items.map((item) => {
+        if (item.id === editingId) {
+          const { id, imgUrl, title, calorie, content } = item;
+          const initialValues = { title, calorie, content, imgFile: null };
+
+          const handleSubmit = (formData) => onUpdate(id, formData);
+
+          const handleSubmitSuccess = (newItem) => {
+            onUpdateSuccess(newItem);
+            setEditingId(null);
+          };
+
+          return (
+            <li key={item.id}>
+              <FoodForm
+                initialValues={initialValues}
+                initialPreview={imgUrl}
+                onSubmit={handleSubmit}
+                onSubmitSuccess={handleSubmitSuccess}
+                onCancel={handleCancel}
+              />
+            </li>
+          );
+        }
+        return (
+          <li key={item.id}>
+            <FoodListItem
+              item={item}
+              onEdit={setEditingId}
+              onDelete={onDelete}
+            />
+          </li>
+        );
+      })}
     </ul>
   );
 }
 
-
+export default FoodList;
