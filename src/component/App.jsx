@@ -1,19 +1,19 @@
-import { useEffect, useState } from "react";
-import { getFoods } from "../api";
-import FoodList from "./FoodList";
-import FoodItForm from "./FoodItForm";
+import { useEffect, useState } from 'react';
+import { getFoods } from '../api';
+import FoodList from '../component/FoodList';
+import FoodForm from '../component/FoodForm';
 
-export default  function App() {
-  const [order, setOrder] = useState("createdAt");
+function App() {
+  const [order, setOrder] = useState('createdAt');
   const [cursor, setCursor] = useState(null);
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingError, setLoadingError] = useState(null);
   const [search, setSearch] = useState('');
 
-  const handleNewestClick = () => setOrder("createdAt");
+  const handleNewestClick = () => setOrder('createdAt');
 
-  const handleCalorieClick = () => setOrder("calorie");
+  const handleCalorieClick = () => setOrder('calorie');
 
   const handleDelete = (id) => {
     const nextItems = items.filter((item) => item.id !== id);
@@ -32,7 +32,6 @@ export default  function App() {
     } finally {
       setIsLoading(false);
     }
-  
     const {
       foods,
       paging: { nextCursor },
@@ -44,7 +43,6 @@ export default  function App() {
     }
     setCursor(nextCursor);
   };
-  
 
   const handleLoadMore = () => {
     handleLoad({
@@ -54,12 +52,15 @@ export default  function App() {
     });
   };
 
-
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     setSearch(e.target['search'].value);
   };
-  
+
+  const handleSubmitSuccess = (newItem) => {
+    setItems((prevItems) => [newItem, ...prevItems]);
+  };
+
   const sortedItems = items.sort((a, b) => b[order] - a[order]);
 
   useEffect(() => {
@@ -67,28 +68,26 @@ export default  function App() {
       order,
       search,
     });
-  }, [order,search]);
-
-
+  }, [order, search]);
 
   return (
     <div>
-      <div>
+      <FoodForm onSubmitSuccess={handleSubmitSuccess} />
       <button onClick={handleNewestClick}>최신순</button>
       <button onClick={handleCalorieClick}>칼로리순</button>
-      <FoodItForm/>
-      </div>
-      <div>
+      <form onSubmit={handleSearchSubmit}>
+        <input name="search" />
+        <button type="submit">검색</button>
+      </form>
       <FoodList items={sortedItems} onDelete={handleDelete} />
       {cursor && (
         <button disabled={isLoading} onClick={handleLoadMore}>
           더보기
         </button>
       )}
-      {loadingError?.message && <p>{loadingError.message}</p>}
-      </div>
+      {loadingError && <p>{loadingError.message}</p>}
     </div>
   );
 }
 
-
+export default App;

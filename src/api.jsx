@@ -10,7 +10,7 @@ export async function getFoods({ order = "", cursor = "", limit = 10 }) {
   return body;
 }
 
-export async function createFoods(formData) {
+export async function createFood(formData) {
   const response = await fetch(`${BASE_URL}foods?`, {
     method: "POST",
     body: formData,
