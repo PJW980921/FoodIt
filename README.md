@@ -1,3 +1,3 @@
 # React + Vite FoodIt Project
 
-Link : fooditproject.netlify.app
+Link : <a href="fooditproject.netlify.app" target="_blank">Link</a>
